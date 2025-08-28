@@ -21,14 +21,16 @@ app.get('/', async (req, res) => {
   });
 });
 const startServer = async () => {
-    try {
-        connectDB(process.env.MONGODB_URL)
-        app.listen(9000 , () => {
-        console.log('Server has started on port http://localhost:9000')
-    })
-    } catch (error) {
-        console.log(error);
-    }
-}
+  try {
+    connectDB(process.env.MONGODB_URL);
+    const port = process.env.PORT || 9000; 
+    app.listen(port, () => {
+      console.log(`Server has started on port http://localhost:${port}`);
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 
 startServer()

@@ -17,7 +17,7 @@ app.use('/api/v1/ImagiX', ImagiX);
 
 app.get('/', async (req, res) => {
   res.status(200).json({
-    message: 'Hello from DALL.E!',
+    message: 'Hello from ImagiX!',
   });
 });
 const startServer = async () => {

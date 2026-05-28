@@ -32,7 +32,7 @@ const CreatePost = () => {
         setGeneratingImg(true);
 
         const response = await fetch(
-          'https://ai-image-generator-pr78.onrender.com/api/v1/ImagiX',
+          '${import.meta.env.VITE_BACKEND_URL}/api/v1/ImagiX',
           {
             method: 'POST',
             headers: {
@@ -70,7 +70,7 @@ const CreatePost = () => {
 
       try {
         const response = await fetch(
-          'https://ai-image-generator-pr78.onrender.com/api/v1/post',
+          '${import.meta.env.VITE_BACKEND_URL}/api/v1/post',
           {
             method: 'POST',
             headers: {

@@ -17,10 +17,12 @@ const CreatePost = () => {
   const [generatingImg, setGeneratingImg] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+  const handleChange = (e) =>
+    setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSurpriseMe = () => {
     const randomPrompt = getRandomPrompt(form.prompt);
+
     setForm({ ...form, prompt: randomPrompt });
   };
 
@@ -28,14 +30,28 @@ const CreatePost = () => {
     if (form.prompt) {
       try {
         setGeneratingImg(true);
-        const response = await fetch('https://ai-image-generator-pr78.onrender.com/api/v1/ImagiX', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ prompt: form.prompt }),
-        });
+
+        const response = await fetch(
+          'https://ai-image-generator-pr78.onrender.com/api/v1/ImagiX',
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              prompt: form.prompt,
+            }),
+          }
+        );
 
         const data = await response.json();
-        setForm({ ...form, photo: `data:image/jpeg;base64,${data.photo}` });
+
+        console.log(data);
+
+        setForm({
+          ...form,
+          photo: `data:image/png;base64,${data.photo}`,
+        });
       } catch (err) {
         alert(err);
       } finally {
@@ -51,15 +67,25 @@ const CreatePost = () => {
 
     if (form.prompt && form.photo) {
       setLoading(true);
+
       try {
-        const response = await fetch('https://ai-image-generator-pr78.onrender.com/api/v1/post', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ ...form }),
-        });
+        const response = await fetch(
+          'https://ai-image-generator-pr78.onrender.com/api/v1/post',
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              ...form,
+            }),
+          }
+        );
 
         await response.json();
+
         alert('Success');
+
         navigate('/');
       } catch (err) {
         alert(err);
@@ -73,35 +99,42 @@ const CreatePost = () => {
 
   return (
     <section className="max-w-4xl mx-auto p-6">
-      {/* Header */}
       <div className="text-center">
-        <h1 className="font-extrabold text-white text-4xl">✨ Create</h1>
+        <h1 className="font-extrabold text-white text-4xl">
+          ✨ Create
+        </h1>
+
         <p className="mt-2 text-gray-400 text-base max-w-xl mx-auto">
-          Generate an imaginative image through AI and share it with the community.
+          Generate an imaginative image through AI and share it
+          with the community.
         </p>
       </div>
 
-      {/* Form */}
-      <form className="mt-12 bg-[#111] p-6 rounded-2xl shadow-lg" onSubmit={handleSubmit}>
+      <form
+        className="mt-12 bg-[#111] p-6 rounded-2xl shadow-lg"
+        onSubmit={handleSubmit}
+      >
         <div className="flex flex-col gap-6">
-          {/* Name Field */}
           <div>
-            <label className="block text-gray-300 mb-2">Your Name</label>
+            <label className="block text-gray-300 mb-2">
+              Your Name
+            </label>
+
             <input
               type="text"
               name="name"
               placeholder="Ex., John Doe"
               value={form.name}
               onChange={handleChange}
-              className="w-full bg-black text-white placeholder-gray-400 border border-gray-700 
-                         rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-white 
-                         focus:border-white transition duration-300"
+              className="w-full bg-black text-white placeholder-gray-400 border border-gray-700 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-white focus:border-white transition duration-300"
             />
           </div>
 
-          {/* Prompt Field + Surprise Me */}
           <div>
-            <label className="block text-gray-300 mb-2">Prompt</label>
+            <label className="block text-gray-300 mb-2">
+              Prompt
+            </label>
+
             <div className="flex">
               <input
                 type="text"
@@ -109,25 +142,20 @@ const CreatePost = () => {
                 placeholder="An Impressionist oil painting of sunflowers in a purple vase…"
                 value={form.prompt}
                 onChange={handleChange}
-                className="flex-1 bg-black text-white placeholder-gray-400 border border-gray-700 
-                           rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-white 
-                           focus:border-white transition duration-300"
+                className="flex-1 bg-black text-white placeholder-gray-400 border border-gray-700 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-white focus:border-white transition duration-300"
               />
+
               <button
                 type="button"
                 onClick={handleSurpriseMe}
-                className="ml-2 px-4 py-2 bg-yellow-400 text-black font-semibold rounded-md 
-                           hover:bg-yellow-500 focus:ring-2 focus:ring-yellow-300 
-                           transition duration-300"
+                className="ml-2 px-4 py-2 bg-yellow-400 text-black font-semibold rounded-md hover:bg-yellow-500 focus:ring-2 focus:ring-yellow-300 transition duration-300"
               >
                 Surprise me
               </button>
             </div>
           </div>
 
-          {/* Image Preview */}
-          <div className="relative border-2 border-dashed border-gray-600 rounded-xl p-4 
-                          flex justify-center items-center bg-[#1a1a1a] min-h-[300px]">
+          <div className="relative border-2 border-dashed border-gray-600 rounded-xl p-4 flex justify-center items-center bg-[#1a1a1a] min-h-[300px]">
             {form.photo ? (
               <img
                 src={form.photo}
@@ -150,28 +178,26 @@ const CreatePost = () => {
           </div>
         </div>
 
-        {/* Buttons */}
         <div className="mt-8 flex gap-4 flex-wrap">
           <button
             type="button"
             onClick={generateImage}
-            className="bg-green-600 hover:bg-green-700 transition text-white 
-                       font-medium rounded-lg px-6 py-3 text-sm"
+            className="bg-green-600 hover:bg-green-700 transition text-white font-medium rounded-lg px-6 py-3 text-sm"
           >
             {generatingImg ? 'Generating...' : 'Generate'}
           </button>
 
           <button
             type="submit"
-            className="bg-indigo-600 hover:bg-indigo-700 transition text-white 
-                       font-medium rounded-lg px-6 py-3 text-sm"
+            className="bg-indigo-600 hover:bg-indigo-700 transition text-white font-medium rounded-lg px-6 py-3 text-sm"
           >
             {loading ? 'Sharing...' : 'Share with the Community'}
           </button>
         </div>
 
         <p className="mt-6 text-sm text-gray-500 text-center">
-          💡 Once you create an image, share it with the community to inspire others!
+          💡 Once you create an image, share it with the community
+          to inspire others!
         </p>
       </form>
     </section>
